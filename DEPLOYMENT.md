@@ -9,9 +9,22 @@ DATABASE_URL="postgresql://..."
 JWT_SECRET="replace-with-a-secure-secret-of-at-least-32-characters"
 JWT_EXPIRES_IN=86400
 NODE_ENV=production
+SEED_ADMIN_NAME="Admin"
+SEED_ADMIN_EMAIL="admin@example.com"
+SEED_ADMIN_PASSWORD="replace-with-a-secure-temporary-password"
 ```
 
 `PORT` is optional. Railway injects it automatically; local development falls back to `3000`.
+
+## Seed admin user
+
+Run the seed only when you need to create the first admin user:
+
+```bash
+npm run prisma:seed
+```
+
+The seed is idempotent. If `SEED_ADMIN_EMAIL` already exists, it does not create a duplicate user.
 
 ## Railway
 
