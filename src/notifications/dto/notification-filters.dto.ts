@@ -4,13 +4,7 @@ import {
   NotificationType,
 } from '@prisma/client'
 import { Type } from 'class-transformer'
-import {
-  IsDateString,
-  IsEnum,
-  IsInt,
-  IsOptional,
-  Min,
-} from 'class-validator'
+import { IsDateString, IsEnum, IsInt, IsOptional, Min } from 'class-validator'
 
 export class NotificationFiltersDto {
   @IsOptional()

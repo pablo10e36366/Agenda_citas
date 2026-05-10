@@ -29,13 +29,22 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales invalidas')
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password)
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    )
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Credenciales invalidas')
     }
 
-    const { password, ...userWithoutPassword } = user
+    const userWithoutPassword = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+    }
     const accessToken = await this.jwtService.signAsync({
       sub: user.id,
       email: user.email,

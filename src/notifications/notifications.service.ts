@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import {
   NotificationChannel,
   NotificationStatus,
@@ -74,7 +78,9 @@ export class NotificationsService {
       createNotificationDto.channel !== NotificationChannel.INTERNAL &&
       !createNotificationDto.recipient
     ) {
-      throw new ConflictException('recipient es obligatorio para EMAIL o WHATSAPP')
+      throw new ConflictException(
+        'recipient es obligatorio para EMAIL o WHATSAPP',
+      )
     }
 
     return this.prisma.notification.create({
@@ -241,7 +247,10 @@ export class NotificationsService {
     }
   }
 
-  private async ensureClientBelongsToBusiness(clientId: number, businessId: number) {
+  private async ensureClientBelongsToBusiness(
+    clientId: number,
+    businessId: number,
+  ) {
     const client = await this.prisma.client.findUnique({
       where: { id: clientId },
       select: { id: true, businessId: true },

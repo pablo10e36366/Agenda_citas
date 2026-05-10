@@ -5,6 +5,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AvailabilityModule } from './availability/availability.module'
 import { AuthModule } from './auth/auth.module'
+import { validateEnvironment } from './config/env.validation'
 import { BusinessesModule } from './businesses/businesses.module'
 import { ClientsModule } from './clients/clients.module'
 import { NotificationsModule } from './notifications/notifications.module'
@@ -17,6 +18,7 @@ import { UsersModule } from './users/users.module'
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validate: validateEnvironment,
     }),
     PrismaModule,
     UsersModule,

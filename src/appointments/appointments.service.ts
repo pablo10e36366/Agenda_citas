@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { AppointmentStatus, Prisma } from '@prisma/client'
 import { NotificationsService } from '../notifications/notifications.service'
 import { PrismaService } from '../prisma/prisma.service'
@@ -113,9 +117,15 @@ export class AppointmentsService {
       throw new ConflictException('El cliente no esta activo')
     }
 
-    const endsAt = new Date(startsAt.getTime() + service.durationMinutes * 60000)
+    const endsAt = new Date(
+      startsAt.getTime() + service.durationMinutes * 60000,
+    )
 
-    await this.ensureClientAvailability(createAppointmentDto.clientId, startsAt, endsAt)
+    await this.ensureClientAvailability(
+      createAppointmentDto.clientId,
+      startsAt,
+      endsAt,
+    )
     await this.ensureStaffAvailability({
       appointmentIdToIgnore: undefined,
       businessId: createAppointmentDto.businessId,
@@ -198,7 +208,7 @@ export class AppointmentsService {
     const finalStaffId =
       rescheduleAppointmentDto.staffId !== undefined
         ? rescheduleAppointmentDto.staffId
-        : appointment.staffId ?? undefined
+        : (appointment.staffId ?? undefined)
 
     await this.ensureStaffAvailability({
       appointmentIdToIgnore: appointment.id,
@@ -370,11 +380,15 @@ export class AppointmentsService {
     }
 
     if (appointment.status === AppointmentStatus.CANCELLED) {
-      throw new ConflictException('No puedes cambiar el estado de una cita cancelada')
+      throw new ConflictException(
+        'No puedes cambiar el estado de una cita cancelada',
+      )
     }
 
     if (appointment.status === AppointmentStatus.COMPLETED) {
-      throw new ConflictException('No puedes cambiar el estado de una cita completada')
+      throw new ConflictException(
+        'No puedes cambiar el estado de una cita completada',
+      )
     }
 
     const updatedAppointment = await this.prisma.appointment.update({
@@ -511,31 +525,35 @@ export class AppointmentsService {
     })
 
     if (!availability) {
-      throw new ConflictException('El staff no tiene disponibilidad para ese horario')
+      throw new ConflictException(
+        'El staff no tiene disponibilidad para ese horario',
+      )
     }
 
-    const overlappingStaffAppointment = await this.prisma.appointment.findFirst({
-      where: {
-        staffId: params.staffId,
-        status: {
-          in: [AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED],
+    const overlappingStaffAppointment = await this.prisma.appointment.findFirst(
+      {
+        where: {
+          staffId: params.staffId,
+          status: {
+            in: [AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED],
+          },
+          startsAt: {
+            lt: params.endsAt,
+          },
+          endsAt: {
+            gt: params.startsAt,
+          },
+          ...(params.appointmentIdToIgnore
+            ? {
+                id: {
+                  not: params.appointmentIdToIgnore,
+                },
+              }
+            : {}),
         },
-        startsAt: {
-          lt: params.endsAt,
-        },
-        endsAt: {
-          gt: params.startsAt,
-        },
-        ...(params.appointmentIdToIgnore
-          ? {
-              id: {
-                not: params.appointmentIdToIgnore,
-              },
-            }
-          : {}),
+        select: { id: true },
       },
-      select: { id: true },
-    })
+    )
 
     if (overlappingStaffAppointment) {
       throw new ConflictException('El staff ya tiene una cita en ese horario')

@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateStaffDto } from './dto/create-staff.dto'
@@ -61,7 +65,9 @@ export class StaffService {
       })
 
       if (existingStaffByEmail) {
-        throw new ConflictException('El email del staff ya esta registrado en este negocio')
+        throw new ConflictException(
+          'El email del staff ya esta registrado en este negocio',
+        )
       }
     }
 
@@ -77,7 +83,9 @@ export class StaffService {
       })
 
       if (existingStaffByPhone) {
-        throw new ConflictException('El telefono del staff ya esta registrado en este negocio')
+        throw new ConflictException(
+          'El telefono del staff ya esta registrado en este negocio',
+        )
       }
     }
 
@@ -93,11 +101,20 @@ export class StaffService {
       })
 
       if (services.length !== serviceIds.length) {
-        throw new NotFoundException('Uno o mas servicios no existen en este negocio')
+        throw new NotFoundException(
+          'Uno o mas servicios no existen en este negocio',
+        )
       }
     }
 
-    const { serviceIds: _serviceIds, ...staffData } = createStaffDto
+    const staffData = {
+      businessId: createStaffDto.businessId,
+      name: createStaffDto.name,
+      email: createStaffDto.email,
+      phone: createStaffDto.phone,
+      roleTitle: createStaffDto.roleTitle,
+      isActive: createStaffDto.isActive,
+    }
 
     try {
       return await this.prisma.staff.create({
@@ -119,7 +136,9 @@ export class StaffService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('El staff ya tiene un dato unico repetido en este negocio')
+        throw new ConflictException(
+          'El staff ya tiene un dato unico repetido en este negocio',
+        )
       }
 
       throw error

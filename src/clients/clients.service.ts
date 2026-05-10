@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateClientDto } from './dto/create-client.dto'
@@ -47,7 +51,9 @@ export class ClientsService {
       })
 
       if (existingClientByEmail) {
-        throw new ConflictException('El email del cliente ya esta registrado en este negocio')
+        throw new ConflictException(
+          'El email del cliente ya esta registrado en este negocio',
+        )
       }
     }
 
@@ -63,7 +69,9 @@ export class ClientsService {
       })
 
       if (existingClientByPhone) {
-        throw new ConflictException('El telefono del cliente ya esta registrado en este negocio')
+        throw new ConflictException(
+          'El telefono del cliente ya esta registrado en este negocio',
+        )
       }
     }
 
@@ -77,7 +85,9 @@ export class ClientsService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('El cliente ya tiene un dato unico repetido en este negocio')
+        throw new ConflictException(
+          'El cliente ya tiene un dato unico repetido en este negocio',
+        )
       }
 
       throw error

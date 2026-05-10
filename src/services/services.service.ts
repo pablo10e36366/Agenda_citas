@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateServiceDto } from './dto/create-service.dto'
@@ -47,7 +51,9 @@ export class ServicesService {
     })
 
     if (existingService) {
-      throw new ConflictException('El slug del servicio ya esta registrado en este negocio')
+      throw new ConflictException(
+        'El slug del servicio ya esta registrado en este negocio',
+      )
     }
 
     try {
@@ -60,7 +66,9 @@ export class ServicesService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        throw new ConflictException('El slug del servicio ya esta registrado en este negocio')
+        throw new ConflictException(
+          'El slug del servicio ya esta registrado en este negocio',
+        )
       }
 
       throw error
