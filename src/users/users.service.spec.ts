@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { Prisma } from '@prisma/client'
+import { UserRole } from '../auth/roles/role.enum'
 import { PrismaService } from '../prisma/prisma.service'
 import { UsersService } from './users.service'
 
@@ -53,7 +54,7 @@ describe('UsersService', () => {
         name: 'Pablo',
         email: 'pablo@gmail.com',
         password: '123456',
-        role: 'admin',
+        role: UserRole.ADMIN,
       }),
     ).rejects.toThrow('El email ya esta registrado')
   })
