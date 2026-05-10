@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateAvailabilityDto } from './dto/create-availability.dto'
 
@@ -50,7 +54,9 @@ export class AvailabilityService {
     const endMinutes = this.toMinutes(createAvailabilityDto.endTime)
 
     if (endMinutes <= startMinutes) {
-      throw new ConflictException('La hora de fin debe ser mayor a la hora de inicio')
+      throw new ConflictException(
+        'La hora de fin debe ser mayor a la hora de inicio',
+      )
     }
 
     const sameDayAvailabilities = await this.prisma.staffAvailability.findMany({
@@ -73,7 +79,9 @@ export class AvailabilityService {
     })
 
     if (overlaps) {
-      throw new ConflictException('Ya existe un bloque de horario traslapado para este staff')
+      throw new ConflictException(
+        'Ya existe un bloque de horario traslapado para este staff',
+      )
     }
 
     return this.prisma.staffAvailability.create({

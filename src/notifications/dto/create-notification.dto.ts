@@ -1,7 +1,4 @@
-import {
-  NotificationChannel,
-  NotificationType,
-} from '@prisma/client'
+import { NotificationChannel, NotificationType } from '@prisma/client'
 import { Type } from 'class-transformer'
 import {
   IsDateString,

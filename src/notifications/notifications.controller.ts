@@ -20,7 +20,9 @@ export class NotificationsController {
   createAppointmentReminder(
     @Body() createReminderDto: CreateAppointmentReminderDto,
   ) {
-    return this.notificationsService.createAppointmentReminder(createReminderDto)
+    return this.notificationsService.createAppointmentReminder(
+      createReminderDto,
+    )
   }
 
   @Get()
