@@ -1,23 +1,16 @@
-import { ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
+import { configureApp } from './app.setup'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get(ConfigService)
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  )
-
+  configureApp(app)
   app.enableShutdownHooks()
 
-  await app.listen(configService.getOrThrow<number>('PORT'))
+  await app.listen(configService.getOrThrow<number>('PORT'), '0.0.0.0')
 }
 
 bootstrap().catch((error: unknown) => {
