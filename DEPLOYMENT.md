@@ -2,7 +2,7 @@
 
 ## Required environment variables
 
-Set these variables in each production provider:
+Set these variables in Railway:
 
 ```env
 DATABASE_URL="postgresql://..."
@@ -34,7 +34,7 @@ Railway should run this as the main backend service.
 2. Add a Railway PostgreSQL service.
 3. Set the API service `DATABASE_URL` to the PostgreSQL connection URL.
 4. Set `JWT_SECRET` and `NODE_ENV=production`.
-5. Deploy the `andy` branch or merge it into the production branch.
+5. Deploy the `main` branch.
 
 The repository includes `railway.json` with:
 
@@ -43,12 +43,4 @@ The repository includes `railway.json` with:
 - Start command: `npm run start:prod`
 - Healthcheck path: `/health`
 
-## Vercel
-
-Vercel is configured as an optional serverless API deployment through `api/index.ts`.
-
-1. Import the same GitHub repository in Vercel.
-2. Set `DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN`, and `NODE_ENV=production`.
-3. Deploy the selected branch.
-
-For production traffic, prefer Railway as the primary API runtime because this Nest/Prisma API keeps normal Node server behavior and runs migrations before deploy. If Vercel is used against PostgreSQL, use a pooled database URL for Prisma to reduce connection pressure from serverless cold starts.
+This repository is backend-only. It does not include frontend or Vercel serverless entrypoints.
