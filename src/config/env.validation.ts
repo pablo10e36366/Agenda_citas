@@ -1,6 +1,7 @@
 type Environment = 'development' | 'test' | 'production'
 
 interface EnvironmentVariables {
+  CORS_ORIGIN?: string
   DATABASE_URL: string
   JWT_EXPIRES_IN: number
   JWT_SECRET: string
@@ -40,6 +41,23 @@ function readOptionalNumber(
   }
 
   return parsed
+}
+
+function readOptionalString(
+  config: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = config[key]
+
+  if (value === undefined || value === null || value === '') {
+    return undefined
+  }
+
+  if (typeof value !== 'string') {
+    throw new Error(`${key} must be a string`)
+  }
+
+  return value.trim()
 }
 
 function readNodeEnv(config: Record<string, unknown>): Environment {
@@ -89,6 +107,7 @@ export function validateEnvironment(
   }
 
   return {
+    CORS_ORIGIN: readOptionalString(config, 'CORS_ORIGIN'),
     DATABASE_URL: databaseUrl,
     JWT_EXPIRES_IN: jwtExpiresIn,
     JWT_SECRET: jwtSecret,

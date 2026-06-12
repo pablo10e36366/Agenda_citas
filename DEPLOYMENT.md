@@ -9,6 +9,7 @@ DATABASE_URL="postgresql://..."
 JWT_SECRET="replace-with-a-secure-secret-of-at-least-32-characters"
 JWT_EXPIRES_IN=86400
 NODE_ENV=production
+CORS_ORIGIN="https://your-frontend-domain.vercel.app"
 SEED_ADMIN_NAME="Admin"
 SEED_ADMIN_EMAIL="admin@example.com"
 SEED_ADMIN_PASSWORD="replace-with-a-secure-temporary-password"
